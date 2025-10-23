@@ -26,6 +26,7 @@ DEFAULT_MAX_LEN = 1000
 def ensure_dirs():
     os.makedirs("./logs", exist_ok=True)
     os.makedirs("./reports", exist_ok=True)
+    os.makedirs("./outputs", exist_ok=True)
 
 def timestamp():
     return datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -129,7 +130,7 @@ def make_paths(input_path):
     ensure_dirs()
     root, ext = os.path.splitext(os.path.basename(input_path))
     ts = timestamp()
-    out_human = f"{root}_HUMAN{ext or '.json'}"
+    out_human = os.path.join("outputs", f"{root}_HUMAN{ext or '.json'}")
     log_path = os.path.join("logs", f"log_{ts}.json")
     report_path = os.path.join("reports", f"report_{ts}.txt")
     return out_human, log_path, report_path
@@ -327,6 +328,18 @@ def run_rank(args):
 
 # ----- CLI -----
 
+def resolve_input_path(input_arg):
+    """Resolve input path: if just a filename, look in inputs/; if full path, use as-is."""
+    if os.path.sep in input_arg or input_arg.startswith("./"):
+        return input_arg  # Already a path
+    else:
+        # Just a filename, look in inputs/
+        inputs_path = os.path.join("inputs", input_arg)
+        if os.path.exists(inputs_path):
+            return inputs_path
+        else:
+            return input_arg  # Fallback to original
+
 def build_parser():
     p = argparse.ArgumentParser(
         description="Human labeling tool for sentence classification and pairwise similarity.",
@@ -337,11 +350,11 @@ def build_parser():
     sub = p.add_subparsers(dest="cmd", required=True)
 
     pc = sub.add_parser("classify", help="Binary semantic similarity labeling (True/False).")
-    pc.add_argument("--input", required=True, help="Path to JSON array with fields: sentence_base, sentence_test, label_semantic_similarity.")
+    pc.add_argument("--input", required=True, help="Path to JSON array with fields: sentence_base, sentence_test, label_semantic_similarity. If filename only, looks in inputs/ directory.")
     pc.set_defaults(func=run_classify)
 
     pr = sub.add_parser("rank", help="Pairwise similarity labeling ('a' vs 'b').")
-    pr.add_argument("--input", required=True, help="Path to JSON array with fields: sentence_base, sentence_a, sentence_b, label_more_similar.")
+    pr.add_argument("--input", required=True, help="Path to JSON array with fields: sentence_base, sentence_a, sentence_b, label_more_similar. If filename only, looks in inputs/ directory.")
     pr.set_defaults(func=run_rank)
 
     return p
@@ -349,6 +362,7 @@ def build_parser():
 def main():
     parser = build_parser()
     args = parser.parse_args()
+    args.input = resolve_input_path(args.input)
     random.seed(args.seed)
     try:
         args.func(args)
