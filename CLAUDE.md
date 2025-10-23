@@ -36,14 +36,14 @@ python label_sentences.py --help
 ## Architecture
 
 ### Single-File Structure
-The entire application is contained in `label_sentences.py` (~360 lines) with these key sections:
+The entire application is contained in `label_sentences.py` (~373 lines) with these key sections:
 
 - **Lines 1-49**: Imports, constants, utility functions (`ascii7`, `hash_preview`, file helpers)
 - **Lines 50-107**: Metrics calculation functions (`metrics_binary`, `metrics_ab`)
 - **Lines 108-125**: Input validation with ASCII normalization and length limits
 - **Lines 126-144**: I/O helpers for structured logging and report generation
 - **Lines 145-327**: Core workflow functions (`run_classify`, `run_rank`)
-- **Lines 328-360**: CLI argument parsing and main entry point
+- **Lines 328-373**: CLI argument parsing and main entry point
 
 ### Data Flow
 1. **Input**: JSON arrays from `inputs/` directory with specific schemas (see docs/user-manual.md)
