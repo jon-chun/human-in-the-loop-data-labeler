@@ -1,0 +1,182 @@
+[
+  {
+    "sentence_base": "The restaurant opens at noon.",
+    "sentence_a": "They start serving lunch at 12:00.",
+    "sentence_b": "Breakfast ends at 9:00 p.m.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "He fixed the bug in the payment form.",
+    "sentence_a": "He resolved the checkout issue.",
+    "sentence_b": "He redesigned the company logo.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "Her flight lands tomorrow morning.",
+    "sentence_a": "She arrives early the next day.",
+    "sentence_b": "She booked a cruise for July.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "Please recycle plastic bottles.",
+    "sentence_a": "Put plastic containers in the blue bin.",
+    "sentence_b": "Glass is heavier than wood.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "The guitar was out of tune.",
+    "sentence_a": "The instrument sounded off-key.",
+    "sentence_b": "The piano teacher canceled class.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "We need a vegetarian option.",
+    "sentence_a": "A meatless dish would help.",
+    "sentence_b": "I forgot to charge my laptop.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "The deadline was extended by two days.",
+    "sentence_a": "We now have 48 more hours.",
+    "sentence_b": "We finished a week early.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "Install the update and reboot.",
+    "sentence_a": "Apply the patch and restart the system.",
+    "sentence_b": "Unplug the monitor for transport.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "The toddler fell asleep in the car seat.",
+    "sentence_a": "The child napped during the drive.",
+    "sentence_b": "The cat scratched the sofa.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "They hiked to the peak at sunrise.",
+    "sentence_a": "They reached the summit early in the morning.",
+    "sentence_b": "They rented kayaks at noon.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "La película fue muy emocionante.",
+    "sentence_a": "La cinta resultó emocionante de principio a fin.",
+    "sentence_b": "El autobús llegó con retraso.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "The server responded with 404.",
+    "sentence_a": "The endpoint returned Not Found.",
+    "sentence_b": "The UI uses a serif font.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "Coffee prices rose sharply this year.",
+    "sentence_a": "The cost of coffee increased a lot this year.",
+    "sentence_b": "Tea leaves are grown in Asia.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "He runs five kilometers every morning.",
+    "sentence_a": "He jogs 5k daily at dawn.",
+    "sentence_b": "He paints landscapes on weekends.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "Keep the seedlings in partial shade.",
+    "sentence_a": "Place young plants where they get filtered light.",
+    "sentence_b": "Water freezes at 0°C.",
+    "label_more_similar": "a"
+  },
+  {
+    "sentence_base": "The meeting moved from 2 to 3 p.m.",
+    "sentence_a": "The meeting was canceled.",
+    "sentence_b": "The meeting time was pushed back by an hour.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "She plays the cello in an orchestra.",
+    "sentence_a": "She collects old coins.",
+    "sentence_b": "She performs classical music on a string instrument.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "The bakery sold out of croissants.",
+    "sentence_a": "They're baking baguettes tomorrow.",
+    "sentence_b": "There are no more croissants left to sell.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "I need to reset my account password.",
+    "sentence_a": "I want to change my profile picture.",
+    "sentence_b": "I need to recover access by creating a new password.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "The package arrived two days late.",
+    "sentence_a": "The package arrived on time.",
+    "sentence_b": "Delivery was delayed by forty-eight hours.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "He spilled coffee on the keyboard.",
+    "sentence_a": "He brewed tea in the kitchen.",
+    "sentence_b": "The keyboard got drenched with coffee.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "We camped under the stars.",
+    "sentence_a": "We checked into a downtown hotel.",
+    "sentence_b": "We slept in tents outside at night.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "The dog chased a squirrel across the yard.",
+    "sentence_a": "The cat slept all afternoon.",
+    "sentence_b": "In the yard, the dog ran after a squirrel.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "Upload the PDF, not the DOCX.",
+    "sentence_a": "Download the spreadsheet in XLSX.",
+    "sentence_b": "Submit the file as a PDF rather than a Word document.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "She started learning Japanese last fall.",
+    "sentence_a": "She is fluent in French and Italian.",
+    "sentence_b": "She began studying Japanese in autumn.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "The conference runs from May 3–5.",
+    "sentence_a": "It was canceled in December.",
+    "sentence_b": "The event spans three days in early May.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "Ils habitent près de la mer.",
+    "sentence_a": "Ils ont acheté une voiture rouge.",
+    "sentence_b": "Ils vivent non loin de l’océan.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "Set the oven to 375°F.",
+    "sentence_a": "Chill the dough overnight.",
+    "sentence_b": "Preheat the oven to three hundred seventy-five degrees Fahrenheit.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "The startup raised a seed round.",
+    "sentence_a": "The startup shut down operations.",
+    "sentence_b": "The company secured its initial funding round.",
+    "label_more_similar": "b"
+  },
+  {
+    "sentence_base": "Water the cactus sparingly in winter.",
+    "sentence_a": "Fertilize roses weekly in spring.",
+    "sentence_b": "During winter, give the cactus very little water.",
+    "label_more_similar": "b"
+  }
+]
