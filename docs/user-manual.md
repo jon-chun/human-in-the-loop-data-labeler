@@ -156,20 +156,46 @@ human-in-the-loop-data-labeler/
    - Review `reports/` for metrics summary
    - Examine `logs/` for detailed session data
 
-### Basic Commands
+### Complete CLI Commands
 
+#### Classification Task (Binary Semantic Similarity)
 ```bash
-# Get help
+# Basic usage - auto-detects inputs/ directory
+python label_sentences.py classify --input sentence_classifier.json
+
+# Full path to input file
+python label_sentences.py classify --input inputs/sentence_classifier.json
+
+# Custom settings
+python label_sentences.py classify --input sentence_classifier.json --seed 123 --max-len 800
+
+# Absolute path
+python label_sentences.py classify --input /full/path/to/sentence_classifier.json
+```
+
+#### Ranking Task (Pairwise Similarity)
+```bash
+# Basic usage - auto-detects inputs/ directory
+python label_sentences.py rank --input sentence_similarity.json
+
+# Full path to input file
+python label_sentences.py rank --input inputs/sentence_similarity.json
+
+# Custom settings
+python label_sentences.py rank --input sentence_similarity.json --seed 456 --max-len 600
+
+# Absolute path
+python label_sentences.py rank --input /full/path/to/sentence_similarity.json
+```
+
+#### Getting Help
+```bash
+# Main help with usage examples
 python label_sentences.py --help
 
-# Classification with custom seed
-python label_sentences.py classify --input inputs/sentence_classifier.json --seed 123
-
-# Ranking with length limit
-python label_sentences.py rank --input inputs/sentence_similarity.json --max-len 500
-
-# Using full file paths
-python label_sentences.py classify --input /full/path/to/data.json
+# Subcommand-specific help
+python label_sentences.py classify --help
+python label_sentences.py rank --help
 ```
 
 ## 6. Labeling Workflows
@@ -283,17 +309,27 @@ Report saved to: reports/report_20241023_143022.txt
 
 ### Examples
 ```bash
-# Basic classification
-python label_sentences.py classify --input my_data.json
+# Classification with filename only (auto-detects inputs/ directory)
+python label_sentences.py classify --input sentence_classifier.json
 
-# With custom settings
-python label_sentences.py classify --input my_data.json --seed 999 --max-len 500
+# Classification with full path
+python label_sentences.py classify --input inputs/sentence_classifier.json
 
-# Ranking task
-python label_sentences.py rank --input ranking_data.json
+# Classification with custom settings
+python label_sentences.py classify --input sentence_classifier.json --seed 999 --max-len 500
 
-# Using absolute path
+# Ranking with filename only (auto-detects inputs/ directory)
+python label_sentences.py rank --input sentence_similarity.json
+
+# Ranking with full path
+python label_sentences.py rank --input inputs/sentence_similarity.json
+
+# Ranking with custom settings
+python label_sentences.py rank --input sentence_similarity.json --seed 777 --max-len 400
+
+# Using absolute paths
 python label_sentences.py classify --input /Users/me/data/classify.json
+python label_sentences.py rank --input /Users/me/data/ranking.json
 ```
 
 ## 8. Output Files

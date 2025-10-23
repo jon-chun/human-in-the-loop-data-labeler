@@ -22,6 +22,14 @@ python label_sentences.py classify --input sentence_classifier.json
 # Pairwise ranking labeling (choose more similar sentence)
 python label_sentences.py rank --input sentence_similarity.json
 
+# With full paths to inputs directory
+python label_sentences.py classify --input inputs/sentence_classifier.json
+python label_sentences.py rank --input inputs/sentence_similarity.json
+
+# With custom options
+python label_sentences.py classify --input sentence_classifier.json --seed 123 --max-len 800
+python label_sentences.py rank --input sentence_similarity.json --seed 456 --max-len 600
+
 # Get help and see all options
 python label_sentences.py --help
 ```
@@ -61,6 +69,38 @@ Pairwise similarity ranking:
 - `--seed <int>`: Random seed for reproducible shuffling (default: 42)
 - `--max-len <int>`: Maximum character length per field before skipping (default: 1000)
 - `--input <path>`: Required input JSON file path. If filename only, automatically looks in `inputs/` directory
+
+## Complete CLI Commands
+
+### Classification Task (True/False Similarity)
+```bash
+# Basic usage
+python label_sentences.py classify --input sentence_classifier.json
+
+# Full path to input file
+python label_sentences.py classify --input inputs/sentence_classifier.json
+
+# Custom settings
+python label_sentences.py classify --input sentence_classifier.json --seed 123 --max-len 800
+
+# Absolute path
+python label_sentences.py classify --input /full/path/to/sentence_classifier.json
+```
+
+### Ranking Task (Choose More Similar)
+```bash
+# Basic usage
+python label_sentences.py rank --input sentence_similarity.json
+
+# Full path to input file
+python label_sentences.py rank --input inputs/sentence_similarity.json
+
+# Custom settings
+python label_sentences.py rank --input sentence_similarity.json --seed 456 --max-len 600
+
+# Absolute path
+python label_sentences.py rank --input /full/path/to/sentence_similarity.json
+```
 
 ## Metrics & Reporting
 

@@ -39,6 +39,7 @@ The application is organized into distinct sections:
 
 - **Lines 328-373**: CLI argument parsing and entry point
   - `build_parser()`: Command-line interface configuration
+  - `resolve_input_path()`: Input path resolution logic
   - Main execution logic with error handling
 
 ### Data Flow Architecture
@@ -241,6 +242,73 @@ Input JSON → Validation → ASCII Normalization → Deterministic Shuffling �
 - **Metrics Calculations**: Add custom metric functions
 - **Output Formats**: Modify report generation for different formats
 - **Directory Structure**: Customize paths in `ensure_dirs()` and `make_paths()`
+
+## CLI Interface Specification
+
+### Command Structure
+The application uses a subcommand-based interface with the following structure:
+```bash
+python label_sentences.py <subcommand> --input <path> [options]
+```
+
+### Subcommands
+1. **`classify`**: Binary semantic similarity labeling (True/False)
+2. **`rank`**: Pairwise similarity ranking ('a' vs 'b')
+
+### Arguments and Options
+- **`--input <path>`** (Required): Input JSON file path
+  - If filename only, automatically looks in `inputs/` directory
+  - If full path provided, uses path as-is
+- **`--seed <int>`** (Optional): Random seed for reproducible shuffling (default: 42)
+- **`--max-len <int>`** (Optional): Maximum characters per field (default: 1000)
+
+### Complete Command Examples
+
+#### Classification Commands
+```bash
+# Basic usage (auto-detects inputs/ directory)
+python label_sentences.py classify --input sentence_classifier.json
+
+# Full path to inputs directory
+python label_sentences.py classify --input inputs/sentence_classifier.json
+
+# With custom seed and length limit
+python label_sentences.py classify --input sentence_classifier.json --seed 123 --max-len 800
+
+# Absolute file path
+python label_sentences.py classify --input /full/path/to/sentence_classifier.json
+```
+
+#### Ranking Commands
+```bash
+# Basic usage (auto-detects inputs/ directory)
+python label_sentences.py rank --input sentence_similarity.json
+
+# Full path to inputs directory
+python label_sentences.py rank --input inputs/sentence_similarity.json
+
+# With custom seed and length limit
+python label_sentences.py rank --input sentence_similarity.json --seed 456 --max-len 600
+
+# Absolute file path
+python label_sentences.py rank --input /full/path/to/sentence_similarity.json
+```
+
+#### Help Commands
+```bash
+# Main help with usage examples
+python label_sentences.py --help
+
+# Subcommand-specific help
+python label_sentences.py classify --help
+python label_sentences.py rank --help
+```
+
+### Path Resolution Logic
+The `resolve_input_path()` function implements the following logic:
+1. If path contains '/' or starts with './' → Use as-is (already a path)
+2. If just a filename → Look in `inputs/` directory first
+3. If not found in `inputs/` → Fallback to original argument
 
 ## Development Guidelines
 

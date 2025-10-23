@@ -342,7 +342,7 @@ def resolve_input_path(input_arg):
 
 def build_parser():
     p = argparse.ArgumentParser(
-        description="Human labeling tool for sentence classification and pairwise similarity.",
+        description="Human labeling tool for sentence classification and pairwise similarity.\n\nUsage examples:\n  python label_sentences.py classify --input sentence_classifier.json\n  python label_sentences.py rank --input sentence_similarity.json",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     p.add_argument("--seed", type=int, default=DEFAULT_SEED, help="Random seed for shuffling items.")

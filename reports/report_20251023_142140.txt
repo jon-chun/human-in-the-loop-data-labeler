@@ -1,0 +1,4 @@
+REPORT rank @ 2025-10-23T14:21:40.960455
+Input: inputs/sentence_similarity.json
+Seed: 42  MaxLen: 1000
+------------------------------------------------------------
