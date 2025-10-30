@@ -2,17 +2,26 @@
 """
 label_sentences.py (enhanced)
 
-Adds:
+A human-in-the-loop data labeling tool for NLP tasks that supports two workflows:
+
+1. CLASSIFICATION: Label semantic similarity between sentence pairs as True/False
+   - Input: JSON with sentence_base, sentence_test, label_semantic_similarity
+   - Usage: python label_sentences.py classify --input sentence_classifier.json
+
+2. RANKING: Choose which of two sentences is more similar to a base sentence
+   - Input: JSON with sentence_base, sentence_a, sentence_b, label_more_similar
+   - Usage: python label_sentences.py rank --input sentence_similarity.json
+
+Enhanced features:
 - Structured JSON logging to ./logs/log_{datetime}.json
 - Plain-text reporting to ./reports/report_{datetime}.txt
-
-Other features:
-- Two subcommands: classify (t/f), rank (a/b)
-- Input: JSON arrays; gold labels trusted but hidden during labeling
 - ASCII 7-bit normalization; skip-invalid logging
 - Reproducible shuffling with --seed
 - Outputs human-labeled file: <root>_HUMAN<ext>
 - Console summary of metrics
+
+The tool automatically looks in the 'inputs/' directory for input files if only a filename is provided.
+All outputs are saved to organized subdirectories (outputs/, logs/, reports/).
 """
 
 from __future__ import annotations
@@ -142,9 +151,214 @@ def write_json(path, obj):
 def append_report_line(report_fp, line=""):
     report_fp.write(line + "\n")
 
+# ----- Help System -----
+
+def print_help_menu(workflow_type="general"):
+    """Display comprehensive help menu based on workflow type."""
+    print("\n" + "=" * 70)
+    print("HELP MENU")
+    print("=" * 70)
+    print()
+    print("Help options:")
+    print("  1 - Show task-specific help")
+    print("  2 - Recall introduction message")
+    print("  3 - Show general help")
+    print()
+
+    while True:
+        choice = input("Select help option (1-3) or Enter to exit help: ").strip()
+        if not choice or choice == "":
+            break
+        elif choice == "1":
+            print("\n" + "-" * 70)
+            if workflow_type == "classify":
+                print_classification_help()
+            elif workflow_type == "rank":
+                print_ranking_help()
+            else:
+                print_general_help()
+            print("\n" + "-" * 70)
+            print()
+        elif choice == "2":
+            print("\n" + "-" * 70)
+            print_introduction_message(workflow_type)
+            print("-" * 70)
+            print()
+        elif choice == "3":
+            print("\n" + "-" * 70)
+            print_general_help()
+            print("\n" + "-" * 70)
+            print()
+        else:
+            print("Please select 1, 2, 3, or press Enter to exit help.")
+
+    print("Returning to labeling...")
+
+def print_general_help():
+    """Print general help information applicable to all workflows."""
+    print("GENERAL HELP")
+    print("-" * 40)
+    print()
+    print("KEYBOARD SHORTCUTS:")
+    print("  h     - Show this help menu")
+    print("  s     - Skip current item (continue to next)")
+    print("  Ctrl+C - Exit the program")
+    print()
+    print("INPUT VALIDATION:")
+    print("  • All text is normalized to 7-bit ASCII for console compatibility")
+    print("  • Records longer than max_len characters are skipped automatically")
+    print("  • Missing or empty required fields are skipped automatically")
+    print("  • All skipped items are logged with privacy-preserving hashes")
+    print()
+    print("OUTPUT FILES:")
+    print("  • outputs/ - Human-labeled data files")
+    print("  • logs/    - Structured JSON logs with metrics and metadata")
+    print("  • reports/ - Human-readable text reports")
+    print()
+    print("REPRODUCIBILITY:")
+    print("  • Items are shuffled using the seed value (--seed)")
+    print("  • Same seed = same order across different runs")
+    print("  • Default seed is 42")
+    print()
+    print("METRICS EXPLANATION:")
+    print("  • Accuracy: Overall correct labeling rate")
+    print("  • Precision: Of items labeled X, how many were actually X")
+    print("  • Recall: Of actual X items, how many were labeled X")
+    print("  • F1 Score: Harmonic mean of precision and recall")
+    print()
+    print("PRIVACY NOTES:")
+    print("  • Logs store text previews with SHA256 hashes, not full text")
+    print("  • Human output files contain original text content")
+    print("  • No personal data is collected or transmitted")
+    print()
+
+def print_classification_help():
+    """Print classification-specific help."""
+    print_general_help()
+    print("CLASSIFICATION WORKFLOW HELP:")
+    print("-" * 40)
+    print()
+    print("YOUR TASK:")
+    print("  Determine if two sentences have similar semantic meaning")
+    print()
+    print("LABELING OPTIONS:")
+    print("  t, true  - Sentences ARE semantically similar")
+    print("  f, false - Sentences are NOT semantically similar")
+    print("  s        - Skip this item")
+    print()
+    print("INPUT FORMAT:")
+    print("  • sentence_base: The reference sentence")
+    print("  • sentence_test: The sentence to compare against base")
+    print("  • label_semantic_similarity: Gold label (hidden from you)")
+    print()
+    print("EXAMPLES:")
+    print("  Base: 'The cat sits on the mat'")
+    print("  Test: 'A feline rests on the rug'")
+    print("  Label: t (true - similar meaning)")
+    print()
+    print("  Base: 'I love programming'")
+    print("  Test: 'The weather is cold today'")
+    print("  Label: f (false - different meaning)")
+    print()
+
+def print_ranking_help():
+    """Print ranking-specific help."""
+    print_general_help()
+    print("RANKING WORKFLOW HELP:")
+    print("-" * 40)
+    print()
+    print("YOUR TASK:")
+    print("  Choose which sentence is more similar to the base sentence")
+    print()
+    print("LABELING OPTIONS:")
+    print("  a - Sentence (a) is more similar to base")
+    print("  b - Sentence (b) is more similar to base")
+    print("  s - Skip this item")
+    print()
+    print("INPUT FORMAT:")
+    print("  • sentence_base: The reference sentence")
+    print("  • sentence_a: First comparison option")
+    print("  • sentence_b: Second comparison option")
+    print("  • label_more_similar: Gold label (hidden from you)")
+    print()
+    print("EXAMPLES:")
+    print("  Base: 'The weather is nice today'")
+    print("  (a): 'It\\'s a beautiful sunny day'")
+    print("  (b): 'I need to buy groceries'")
+    print("  Label: a (sentence a is more similar)")
+    print()
+    print("  Base: 'Programming in Python is fun'")
+    print("  (a): 'Java is also a programming language'")
+    print("  (b): 'The cat is sleeping'")
+    print("  Label: a (sentence a is more similar to programming)")
+    print()
+
+def print_introduction_message(workflow_type):
+    """Print the introduction message (can be recalled from help)."""
+    if workflow_type == "classify":
+        print_classify_intro()
+    elif workflow_type == "rank":
+        print_rank_intro()
+
 # ----- Workflows -----
 
+def print_classify_intro():
+    """Print introduction specific to the classification workflow."""
+    print("=" * 70)
+    print("CLASSIFICATION Workflow: Semantic Similarity Labeling")
+    print("=" * 70)
+    print("You will label whether sentence pairs are semantically similar.")
+    print("For each item, you'll see:")
+    print("  • A base sentence")
+    print("  • A test sentence to compare against the base")
+    print()
+    print("Your task: Determine if the test sentence has similar meaning to the base sentence.")
+    print("  • Type 't' (true) if they ARE semantically similar")
+    print("  • Type 'f' (false) if they are NOT semantically similar")
+    print("  • Type 's' to skip the current item")
+    print("  • Type 'h' to show help menu")
+    print()
+    print("Example:")
+    print("  Base: 'The cat sits on the mat'")
+    print("  Test: 'A feline is resting on the rug'")
+    print("  Label: 't' (true - they have similar meaning)")
+    print()
+    print("All outputs are saved to outputs/, logs/, and reports/ directories")
+    print("Press Ctrl+C to exit at any time")
+    print()
+    print("Starting classification workflow...\n")
+
+def print_rank_intro():
+    """Print introduction specific to the ranking workflow."""
+    print("=" * 70)
+    print("RANKING Workflow: Pairwise Similarity Comparison")
+    print("=" * 70)
+    print("You will choose which of two sentences is more similar to a base sentence.")
+    print("For each item, you'll see:")
+    print("  • A base sentence")
+    print("  • Sentence (a): First comparison option")
+    print("  • Sentence (b): Second comparison option")
+    print()
+    print("Your task: Determine which sentence (a or b) is more similar to the base.")
+    print("  • Type 'a' if sentence (a) is more similar to the base")
+    print("  • Type 'b' if sentence (b) is more similar to the base")
+    print("  • Type 's' to skip the current item")
+    print("  • Type 'h' to show help menu")
+    print()
+    print("Example:")
+    print("  Base: 'The weather is nice today'")
+    print("  (a): 'It\'s a beautiful sunny day'")
+    print("  (b): 'I need to buy groceries'")
+    print("  Label: 'a' (sentence a is more similar to the base)")
+    print()
+    print("All outputs are saved to outputs/, logs/, and reports/ directories")
+    print("Press Ctrl+C to exit at any time")
+    print()
+    print("Starting ranking workflow...\n")
+
 def run_classify(args):
+    print_classify_intro()
+
     with open(args.input, "r", encoding="utf-8") as f:
         data = json.load(f)
     rnd = random.Random(args.seed)
@@ -182,9 +396,17 @@ def run_classify(args):
             print(f"[{len(kept)+1}] Base : {base}")
             print(f"      Test : {test}")
             while True:
-                lab = input("Label (t/f or s to skip): ").strip().lower()
-                if lab in ("t","true","f","false","s"): break
-                print("Please type 't', 'f', or 's'.")
+                lab = input("Label (t/f/h or s to skip): ").strip().lower()
+                if lab == "h":
+                    print_help_menu("classify")
+                    # Redisplay current item after help
+                    print("-"*60)
+                    print(f"[{len(kept)+1}] Base : {base}")
+                    print(f"      Test : {test}")
+                    continue
+                elif lab in ("t","true","f","false","s"):
+                    break
+                print("Please type 't', 'f', 'h', or 's'.")
             if lab == "s":
                 log["skips"].append({"reason":"user_skip", "record_preview":{"base":hash_preview(base),"test":hash_preview(test)}})
                 continue
@@ -235,6 +457,8 @@ def run_classify(args):
     print(f"  Report TXT   -> {report_path}\n")
 
 def run_rank(args):
+    print_rank_intro()
+
     with open(args.input, "r", encoding="utf-8") as f:
         data = json.load(f)
     rnd = random.Random(args.seed)
@@ -273,9 +497,18 @@ def run_rank(args):
             print(f"      (a): {sa}")
             print(f"      (b): {sb}")
             while True:
-                lab = input("Label ('a'/'b' or 's' to skip): ").strip().lower()
-                if lab in ("a","b","s"): break
-                print("Please type 'a', 'b', or 's'.")
+                lab = input("Label ('a'/'b'/'h' or 's' to skip): ").strip().lower()
+                if lab == "h":
+                    print_help_menu("rank")
+                    # Redisplay current item after help
+                    print("-"*60)
+                    print(f"[{len(kept)+1}] Base : {base}")
+                    print(f"      (a): {sa}")
+                    print(f"      (b): {sb}")
+                    continue
+                elif lab in ("a","b","s"):
+                    break
+                print("Please type 'a', 'b', 'h', or 's'.")
             if lab == "s":
                 log["skips"].append({"reason":"user_skip", "record_preview":{"base":hash_preview(base),"a":hash_preview(sa),"b":hash_preview(sb)}})
                 continue
