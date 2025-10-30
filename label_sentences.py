@@ -144,6 +144,20 @@ def append_report_line(report_fp, line=""):
 
 # ----- Workflows -----
 
+def show_hotkey_legend():
+    print("\n" + "="*60)
+    print("HOTKEY LEGEND")
+    print("="*60)
+    print("  t/f      Label True/False and move to next item")
+    print("  s        Skip this item")
+    print("  S        Save progress and exit")
+    print("  A        Abort immediately (discard all unsaved work)")
+    print("  B        Go back to previous item (re-label)")
+    print("  E        Edit notes for current item")
+    print("  H        Show this help menu")
+    print("  Q        Quit (prompt to save or abort)")
+    print("="*60 + "\n")
+
 def run_classify(args):
     with open(args.input, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -162,6 +176,7 @@ def run_classify(args):
 
     y_true, y_pred = [], []
     kept = []
+    history = []  # Track labeling history for back navigation
 
     with open(report_path, "w", encoding="utf-8") as rfp:
         append_report_line(rfp, f"REPORT classify @ {datetime.now().isoformat()}")
@@ -170,38 +185,100 @@ def run_classify(args):
         append_report_line(rfp, "-"*60)
 
         print(f"\nLoaded {len(data)} items. Shuffled with seed={args.seed}.")
-        print("Label True/False (t/f). 's' to skip.\n")
+        show_hotkey_legend()
 
-        for i, idx in enumerate(order, 1):
+        order_idx = 0
+        while order_idx < len(order):
+            idx = order[order_idx]
             rec = data[idx]
             ok, a = validate_ascii(rec, fields, args.max_len, log)
-            if not ok: continue
+            if not ok:
+                order_idx += 1
+                continue
 
             base, test = a["sentence_base"], a["sentence_test"]
             print("-"*60)
             print(f"[{len(kept)+1}] Base : {base}")
             print(f"      Test : {test}")
+            print("\nOptions: (t)rue (f)alse (s)kip | (S)ave (A)bort (B)ack (E)dit (H)elp (Q)uit")
+
             while True:
-                lab = input("Label (t/f or s to skip): ").strip().lower()
-                if lab in ("t","true","f","false","s"): break
-                print("Please type 't', 'f', or 's'.")
-            if lab == "s":
-                log["skips"].append({"reason":"user_skip", "record_preview":{"base":hash_preview(base),"test":hash_preview(test)}})
+                lab = input("Label: ").strip()
+                lab_lower = lab.lower()
+
+                if lab_lower in ("t","true"):
+                    human = True
+                    break
+                elif lab_lower in ("f","false"):
+                    human = False
+                    break
+                elif lab_lower == "s":
+                    log["skips"].append({"reason":"user_skip", "record_preview":{"base":hash_preview(base),"test":hash_preview(test)}})
+                    order_idx += 1
+                    lab = "skip"
+                    break
+                elif lab_lower == "h":
+                    show_hotkey_legend()
+                    continue
+                elif lab_lower == "e":
+                    edit_note = input("Add note for this item: ").strip()
+                    if edit_note:
+                        print(f"Note added: {edit_note}\n")
+                    continue
+                elif lab.upper() == "B":
+                    # Uppercase B = back command
+                    if history:
+                        history.pop()
+                        y_pred.pop()
+                        y_true.pop()
+                        kept.pop()
+                        log["items"].pop()
+                        order_idx -= 1
+                        print("Went back to previous item.\n")
+                        break
+                    else:
+                        print("No previous items to go back to.\n")
+                        continue
+                elif lab.upper() == "S":
+                    print("\nSaving and exiting...")
+                    lab = "save"
+                    break
+                elif lab.upper() == "A":
+                    print("\nAborting immediately...")
+                    sys.exit(0)
+                elif lab.upper() == "Q":
+                    choice = input("Save progress before quitting? (y/n): ").strip().lower()
+                    if choice in ("y", "yes"):
+                        print("Saving and exiting...")
+                        lab = "save"
+                        break
+                    else:
+                        print("Aborting without saving...")
+                        sys.exit(0)
+                else:
+                    print("Please type 't', 'f', 's', or use hotkeys: H for help, S to save, A to abort, B back, E edit, Q quit")
+                    continue
+
+            if lab == "skip":
                 continue
+            elif lab == "save":
+                order_idx = len(order)  # Force loop exit
+                break
+            elif lab in ("t", "true", "f", "false"):
+                history.append((idx, rec, base, test))
+                kept.append(rec)
+                y_pred.append(human)
+                gold = bool(rec.get(gold_key))
+                y_true.append(gold)
 
-            human = (lab in ("t","true"))
-            kept.append(rec)
-            y_pred.append(human)
-            gold = bool(rec.get(gold_key))
-            y_true.append(gold)
-
-            log["items"].append({
-                "idx": idx,
-                "base_preview": hash_preview(base),
-                "test_preview": hash_preview(test),
-                "human": human,
-                "gold_hidden": True
-            })
+                log["items"].append({
+                    "idx": idx,
+                    "base_preview": hash_preview(base),
+                    "test_preview": hash_preview(test),
+                    "human": human,
+                    "gold_hidden": True
+                })
+                order_idx += 1
 
     # Output HUMAN file
     out_records = []
@@ -252,6 +329,7 @@ def run_rank(args):
 
     y_true, y_pred = [], []
     kept = []
+    history = []  # Track labeling history for back navigation
 
     with open(report_path, "w", encoding="utf-8") as rfp:
         append_report_line(rfp, f"REPORT rank @ {datetime.now().isoformat()}")
@@ -260,40 +338,104 @@ def run_rank(args):
         append_report_line(rfp, "-"*60)
 
         print(f"\nLoaded {len(data)} items. Shuffled with seed={args.seed}.")
-        print("Choose 'a' or 'b'. 's' to skip.\n")
+        show_hotkey_legend()
 
-        for i, idx in enumerate(order, 1):
+        order_idx = 0
+        while order_idx < len(order):
+            idx = order[order_idx]
             rec = data[idx]
             ok, a = validate_ascii(rec, fields, args.max_len, log)
-            if not ok: continue
+            if not ok:
+                order_idx += 1
+                continue
 
             base, sa, sb = a["sentence_base"], a["sentence_a"], a["sentence_b"]
             print("-"*60)
             print(f"[{len(kept)+1}] Base : {base}")
             print(f"      (a): {sa}")
             print(f"      (b): {sb}")
+            print("\nOptions: (a) or (b) | (s)kip | (S)ave (A)bort (B)ack (E)dit (H)elp (Q)uit")
+
             while True:
-                lab = input("Label ('a'/'b' or 's' to skip): ").strip().lower()
-                if lab in ("a","b","s"): break
-                print("Please type 'a', 'b', or 's'.")
-            if lab == "s":
-                log["skips"].append({"reason":"user_skip", "record_preview":{"base":hash_preview(base),"a":hash_preview(sa),"b":hash_preview(sb)}})
+                lab = input("Label: ").strip()
+                lab_lower = lab.lower()
+
+                if lab_lower == "a":
+                    human = "a"
+                    break
+                elif lab_lower == "b" and lab.isupper():
+                    # Uppercase B = back command
+                    if history:
+                        history.pop()
+                        y_pred.pop()
+                        y_true.pop()
+                        kept.pop()
+                        log["items"].pop()
+                        order_idx -= 1
+                        print("Went back to previous item.\n")
+                        break
+                    else:
+                        print("No previous items to go back to.\n")
+                        continue
+                elif lab_lower == "b":
+                    # Lowercase b = label selection
+                    human = "b"
+                    break
+                elif lab_lower == "s":
+                    log["skips"].append({"reason":"user_skip", "record_preview":{"base":hash_preview(base),"a":hash_preview(sa),"b":hash_preview(sb)}})
+                    order_idx += 1
+                    lab = "skip"
+                    break
+                elif lab_lower == "h":
+                    show_hotkey_legend()
+                    continue
+                elif lab_lower == "e":
+                    edit_note = input("Add note for this item: ").strip()
+                    if edit_note:
+                        print(f"Note added: {edit_note}\n")
+                    continue
+                elif lab.upper() == "S":
+                    print("\nSaving and exiting...")
+                    lab = "save"
+                    break
+                elif lab.upper() == "A":
+                    print("\nAborting immediately...")
+                    sys.exit(0)
+                elif lab.upper() == "Q":
+                    choice = input("Save progress before quitting? (y/n): ").strip().lower()
+                    if choice in ("y", "yes"):
+                        print("Saving and exiting...")
+                        lab = "save"
+                        break
+                    else:
+                        print("Aborting without saving...")
+                        sys.exit(0)
+                else:
+                    print("Please type 'a', 'b', 's', or use hotkeys: H for help, S to save, A to abort, B back, E edit, Q quit")
+                    continue
+
+            if lab == "skip":
                 continue
+            elif lab == "save":
+                order_idx = len(order)  # Force loop exit
+                break
+            elif lab in ("a", "b"):
+                history.append((idx, rec, base, sa, sb))
+                human = lab
+                kept.append(rec)
+                y_pred.append(human)
+                gold = "a" if str(rec.get(gold_key)).lower()=="a" else "b"
+                y_true.append(gold)
 
-            human = lab
-            kept.append(rec)
-            y_pred.append(human)
-            gold = "a" if str(rec.get(gold_key)).lower()=="a" else "b"
-            y_true.append(gold)
-
-            log["items"].append({
-                "idx": idx,
-                "base_preview": hash_preview(base),
-                "a_preview": hash_preview(sa),
-                "b_preview": hash_preview(sb),
-                "human": human,
-                "gold_hidden": True
-            })
+                log["items"].append({
+                    "idx": idx,
+                    "base_preview": hash_preview(base),
+                    "a_preview": hash_preview(sa),
+                    "b_preview": hash_preview(sb),
+                    "human": human,
+                    "gold_hidden": True
+                })
+                order_idx += 1
 
     # Output HUMAN file
     out_records = []
