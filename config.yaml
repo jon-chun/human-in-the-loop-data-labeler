@@ -1,0 +1,13 @@
+seed: 42
+max_len: 1000
+LABELING_OVERLAP: 3
+dirs:
+  logs: ./logs
+  reports: ./reports
+  outputs: ./outputs
+  inputs: ./inputs
+  outputs_merged: ./outputs-merged
+  resources: ./resources
+features:
+  enable_textual_tui: false
+  record_per_item_timing: true
