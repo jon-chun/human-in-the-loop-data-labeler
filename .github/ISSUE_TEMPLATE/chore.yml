@@ -1,0 +1,8 @@
+name: Chore
+description: Refactor/docs/infra change
+title: "chore: "
+labels: [chore]
+body:
+  - type: textarea
+    id: scope
+    attributes: { label: Scope, placeholder: Small and atomic }

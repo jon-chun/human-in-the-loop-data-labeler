@@ -1,0 +1,20 @@
+name: Feature request
+description: Request a new capability
+title: "feat: "
+labels: [feature]
+body:
+  - type: input
+    id: goal
+    attributes: { label: Outcome, placeholder: e.g., Add resume/review mode toggle }
+    validations: { required: true }
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria (Given/When/Then bullets)
+      placeholder: |
+        - Given ...
+        - When ...
+        - Then ...
+  - type: textarea
+    id: risks
+    attributes: { label: Risks / constraints }
