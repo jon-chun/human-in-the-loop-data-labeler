@@ -27,3 +27,4 @@ python src/label_sentences.py merge
 ## Troubleshooting
 - If `pyenv` not found, use system Python 3.10+
 - For permission errors on scripts: `chmod +x scripts/*.sh`
+
