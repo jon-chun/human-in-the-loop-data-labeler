@@ -1,24 +1,25 @@
 # User Manual
 
-## Getting Started
-Run labeling tasks interactively from the terminal.
-
-### Commands
-- **classify** — Binary True/False labeling
-- **rank** — Choose 'a' or 'b'
-- **merge** — Combine all labeled outputs
-
-### Example
+## Install (one-time)
 ```bash
-python src/label_sentences.py classify --input inputs/sentence_classifier.json   --annotator-id u001 --annotator-name "Ada Lovelace" --annotator-email ada@example.com
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e .[dev]
 ```
 
-## Outputs
-- **./outputs/**: Human-labeled JSONs
-- **./logs/**: JSON logs per session
-- **./reports/**: Plain-text summaries
-- **./outputs-merged/**: Consolidated data
+## Run
+- **Classify**
+  ```bash
+  python src/label_sentences.py classify --input inputs/sentence_classifier.json     --annotator-id u001 --annotator-name "Ada Lovelace" --annotator-email ada@example.com
+  ```
+- **Rank**
+  ```bash
+  python src/label_sentences.py rank --input inputs/sentence_similarity.json     --annotator-id u001 --annotator-name "Ada Lovelace" --annotator-email ada@example.com
+  ```
+- **Merge**
+  ```bash
+  python src/label_sentences.py merge
+  ```
 
-## Tips
-- Use `--seed` to reproduce order.
-- Use `--max-len` to limit input field length.
+## Troubleshooting
+- If terminal waits for input, type: `t` or `f` (classify), `a` or `b` (rank), or `s` to skip.
+- Outputs appear in `./outputs/`, logs in `./logs/`, and reports in `./reports/`.

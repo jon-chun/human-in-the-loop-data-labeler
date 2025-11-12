@@ -1,23 +1,17 @@
 [project]
 name = "human-in-the-loop-data-labeler"
-version = "0.3.0"
-description = "CLI + TUI tools for human labeling, assignments, merge, and analysis"
-authors = [{name = "Your Name", email = "you@example.com"}]
+version = "0.4.1"
+description = "Educational HITL labeling tool"
+authors = [{name = "Instructor", email = "instructor@example.edu"}]
 requires-python = ">=3.10"
-dependencies = [
-  "pyyaml>=6.0",
-]
+dependencies = ["pyyaml>=6.0"]
 
 [project.optional-dependencies]
-dev = [
-  "ruff>=0.6.0",
-  "mypy>=1.10.0",
-  "pytest>=8.0.0",
-]
+dev = ["ruff>=0.6.0", "pytest>=8.0.0", "mypy>=1.10.0"]
 
 [tool.ruff]
 line-length = 100
 
 [tool.mypy]
 python_version = "3.10"
-strict = false
+ignore_missing_imports = true

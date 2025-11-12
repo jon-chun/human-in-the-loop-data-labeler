@@ -1,36 +1,30 @@
-# Instructor Lab Manual
+# Instructor Lab Manual (10-week cohort)
 
-## Purpose
-Guide students in extending and analyzing the Human-in-the-Loop Labeler project.  
-Includes governance setup, enhancement roadmap, and evaluation steps.
+## What changed
+- Entry script moved to `src/label_sentences.py`
+- Governance: CI, commitlint, CODEOWNERS, Issue/PR templates
+- Claude: `/issue <n>` command added at `.claude/commands/issue.md`
 
-## Student Assignments Overview
-Students must implement and test **20 modular enhancements** (TUI, metadata, logging, reporting, etc.), mainly via `src/utils/`.
+## Runbook (students)
+1. Clone and open VS Code → Terminal.
+2. Create venv and install: `pip install -e .[dev]`.
+3. Start Claude Code CLI in terminal; run `/init`.
+4. Create a small Issue (Feature/Bug/Chore).
+5. Run `/issue <n>` to plan & implement.
+6. Ensure CI green → squash merge.
 
-## Key Enhancements
-1. Config centralization (`config.yaml`)
-2. pyproject.toml setup with uv + lint/test defaults
-3. Smart JSON editing (`util_edit_json.py`)
-4. Annotator metadata capture
-5. Human assignment system from CSV
-6. Enhanced TUI using textual
-7. Time-tracking per labeling event
-8. Merge/aggregate/validate outputs
-9. Report generation and visualization
-10. Inter-annotator agreement stats
-11. Logging refactor (`util_logging.py`)
-12. Resume/review improvements
-13. Session metadata + UUIDs
-14. Configurable field limits
-15. Performance summary reports
-16. CLI menu-based UX
-17. Metadata-aware aggregation
-18. Advanced error handling/log masking
-19. Outputs diffing on review
-20. Automated documentation update.
+## Prompts (copy/paste)
+- “Explain Conventional Commits with examples for `feat`, `fix`, `docs`.”
+- “Show me how to write a minimal plan for Issue #<n> based on the template.”
+- “Summarize differences between branch, PR, and protected main with a diagram-level explanation.”
+- “Describe what a CI job does in this repo and how to fix a failing Ruff lint.”
+- “Given this error message from VS Code terminal, propose three minimal steps to resolve it.”
 
-## Evaluation Rubric
-- ✅ Code modularity and clarity
-- ✅ Functional correctness
-- ✅ Logging and reporting completeness
-- ✅ Governance compliance (PR, Issue, CI)
+## Resources
+- GitHub CLI Quickstart: https://docs.github.com/en/github-cli/github-cli/quickstart
+- GitHub Flow: https://docs.github.com/get-started/quickstart/github-flow
+- Ruff: https://docs.astral.sh/ruff/
+- VS Code Integrated Terminal: https://code.visualstudio.com/docs/terminal/basics
+
+## Assessment
+- PRs are atomic, CI passes, correct Conventional Commit, and instructor/peer review completed.

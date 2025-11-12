@@ -1,125 +1,29 @@
-# Human-in-the-Loop Data Labeler
-
-A single-file Python application for collecting human labels on NLP tasks with **zero external dependencies**. This tool provides interactive terminal-based labeling workflows for classification and ranking tasks.
-
-## Features
-
-- 🎯 **Two labeling workflows**: Binary classification and pairwise ranking
-- 🛡️ **Zero dependencies**: Uses only Python standard library
-- 🔧 **Robust data handling**: ASCII normalization, length limits, validation
-- 📊 **Comprehensive metrics**: Accuracy, F1 scores, confusion matrices
-- 📝 **Structured logging**: JSON logs with privacy-preserving hashes
-- 📈 **Detailed reports**: Human-readable summaries with metrics
-- 🎲 **Reproducible**: Deterministic shuffling with configurable seeds
-- ⚡ **Skip functionality**: Graceful handling of invalid or ambiguous data
+# Human-in-the-Loop Data Labeler (Modular)
 
 ## Quick Start
-
 ```bash
-# Classification labeling (binary semantic similarity)
-python label_sentences.py classify --input sentence_classifier.json
-
-# Pairwise ranking labeling (choose more similar sentence)
-python label_sentences.py rank --input sentence_similarity.json
-
-# With full paths to inputs directory
-python label_sentences.py classify --input inputs/sentence_classifier.json
-python label_sentences.py rank --input inputs/sentence_similarity.json
-
-# With custom options
-python label_sentences.py classify --input sentence_classifier.json --seed 123 --max-len 800
-python label_sentences.py rank --input sentence_similarity.json --seed 456 --max-len 600
-
-# Get help and see all options
-python label_sentences.py --help
+python3 -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -e .[dev]
+python src/label_sentences.py --help
 ```
 
-## Repository Structure
-
-```
-.
-├── label_sentences.py          # Main application (single-file, ~373 lines)
-├── inputs/
-│   ├── sentence_classifier.json    # Sample classification dataset
-│   └── sentence_similarity.json    # Sample ranking dataset
-├── outputs/                   # Created automatically (human-labeled files)
-├── docs/
-│   ├── tech-spec.md           # Technical specifications
-│   └── user-manual.md         # Detailed user guide
-├── logs/                      # Created automatically (JSON logs)
-└── reports/                   # Created automatically (TXT reports)
-```
-
-## Supported Tasks
-
-### Classification (`classify`)
-Binary semantic similarity labeling:
-- **Input**: Two sentences to compare
-- **Output**: True/False for semantic similarity
-- **Use case**: Training sentence similarity classifiers
-
-### Ranking (`rank`)
-Pairwise similarity ranking:
-- **Input**: Base sentence + two candidate sentences
-- **Output**: Choose 'a' or 'b' (more similar to base)
-- **Use case**: Training semantic ranking models
-
-## Command Options
-
-- `--seed <int>`: Random seed for reproducible shuffling (default: 42)
-- `--max-len <int>`: Maximum character length per field before skipping (default: 1000)
-- `--input <path>`: Required input JSON file path. If filename only, automatically looks in `inputs/` directory
-
-## Complete CLI Commands
-
-### Classification Task (True/False Similarity)
+### Label
 ```bash
-# Basic usage
-python label_sentences.py classify --input sentence_classifier.json
-
-# Full path to input file
-python label_sentences.py classify --input inputs/sentence_classifier.json
-
-# Custom settings
-python label_sentences.py classify --input sentence_classifier.json --seed 123 --max-len 800
-
-# Absolute path
-python label_sentences.py classify --input /full/path/to/sentence_classifier.json
+python src/label_sentences.py classify --input inputs/sentence_classifier.json   --annotator-id u001 --annotator-name "Ada Lovelace" --annotator-email ada@example.com
 ```
 
-### Ranking Task (Choose More Similar)
+### Merge
 ```bash
-# Basic usage
-python label_sentences.py rank --input sentence_similarity.json
-
-# Full path to input file
-python label_sentences.py rank --input inputs/sentence_similarity.json
-
-# Custom settings
-python label_sentences.py rank --input sentence_similarity.json --seed 456 --max-len 600
-
-# Absolute path
-python label_sentences.py rank --input /full/path/to/sentence_similarity.json
+python src/label_sentences.py merge
 ```
 
-## Metrics & Reporting
+## Project Structure
+- `src/label_sentences.py` — CLI entrypoint
+- `src/hil/*` — core modules
+- `docs/*` — user/instructor manuals, tech spec
+- `.github/*` — governance (templates, CI)
+- `.claude/commands` — CLI slash commands for Claude Code
 
-- **Classification**: Accuracy, recall/F1 per class, confusion matrix (TP/FP/FN/TN)
-- **Ranking**: Accuracy, recall/F1 per label ('a','b'), 2x2 confusion grid
-- **Structured logs**: `./logs/log_{timestamp}.json` with hashed previews for privacy
-- **Human reports**: `./reports/report_{timestamp}.txt` with comprehensive summaries
-
-## Requirements
-
-- Python 3.8+ (for type hints and f-strings)
-- No external dependencies (standard library only)
-- Terminal/console access for interactive labeling
-
-## Documentation
-
-- 📖 [User Manual](docs/user-manual.md) - Complete usage instructions and examples
-- 🔧 [Technical Specifications](docs/tech-spec.md) - Architecture and implementation details
-
-## License
-
-MIT License - see LICENSE file for details.
+## Troubleshooting
+- If `pyenv` not found, use system Python 3.10+
+- For permission errors on scripts: `chmod +x scripts/*.sh`

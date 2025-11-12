@@ -1,3 +1,4 @@
+# Configuration
 seed: 42
 max_len: 1000
 LABELING_OVERLAP: 3
