@@ -135,6 +135,63 @@ def make_paths(input_path):
     report_path = os.path.join("reports", f"report_{ts}.txt")
     return out_human, log_path, report_path
 
+def check_existing_output(out_human, input_data, cmd_type):
+    """Check if output file exists and determine completion status.
+
+    Returns:
+        tuple: (exists, is_complete, completed_indices, resume_index)
+        - exists: bool - output file exists
+        - is_complete: bool - all input items have been processed
+        - completed_indices: set - indices already processed
+        - resume_index: int - index to resume from (0 if complete)
+    """
+    if not os.path.exists(out_human):
+        return False, False, set(), 0
+
+    try:
+        with open(out_human, "r", encoding="utf-8") as f:
+            existing_data = json.load(f)
+
+        # Create a mapping of original indices to processed items
+        completed_indices = set()
+        for item in existing_data:
+            # Use a combination of fields to identify the original item
+            if cmd_type == "classify":
+                key = (item.get("sentence_base", ""), item.get("sentence_test", ""))
+            else:  # rank
+                key = (item.get("sentence_base", ""), item.get("sentence_a", ""), item.get("sentence_b", ""))
+
+            # Find the original index by matching the key
+            for idx, original_item in enumerate(input_data):
+                if cmd_type == "classify":
+                    original_key = (original_item.get("sentence_base", ""), original_item.get("sentence_test", ""))
+                else:
+                    original_key = (original_item.get("sentence_base", ""), original_item.get("sentence_a", ""), original_item.get("sentence_b", ""))
+
+                if original_key == key:
+                    completed_indices.add(idx)
+                    break
+
+        is_complete = len(completed_indices) == len(input_data)
+        resume_index = 0 if is_complete else max(completed_indices) + 1 if completed_indices else 0
+
+        return True, is_complete, completed_indices, resume_index
+
+    except (json.JSONDecodeError, IOError) as e:
+        eprint(f"Warning: Could not read existing output file {out_human}: {e}")
+        return False, False, set(), 0
+
+def confirm_review_revision():
+    """Ask user if they want to review/revise existing complete labeling."""
+    while True:
+        response = input("This input file has already been completely labeled. Do you want to review/revise? [Y/n]: ").strip().lower()
+        if response in ("", "y", "yes"):
+            return True
+        elif response in ("n", "no"):
+            return False
+        else:
+            print("Please type 'y' or 'n'.")
+
 def write_json(path, obj):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(obj, f, ensure_ascii=False, indent=2)
@@ -152,9 +209,24 @@ def run_classify(args):
     rnd.shuffle(order)
 
     out_human, log_path, report_path = make_paths(args.input)
+
+    # Check for existing output and handle accordingly
+    exists, is_complete, completed_indices, resume_idx = check_existing_output(out_human, data, "classify")
+
+    if exists:
+        if is_complete:
+            if not confirm_review_revision():
+                print("Exiting without changes.")
+                return
+            print("Review mode: You can revise any previous labels.")
+        else:
+            print(f"Resuming from item {resume_idx + 1}. {len(completed_indices)} items already completed.")
+
     log = {
         "cmd": "classify", "input": args.input, "seed": args.seed, "max_len": args.max_len,
-        "start_ts": time.time(), "skips": [], "items": []
+        "start_ts": time.time(), "skips": [], "items": [],
+        "resuming_from": resume_idx if exists else None,
+        "existing_completed": len(completed_indices) if exists else 0
     }
 
     fields = ["sentence_base", "sentence_test"]
@@ -163,16 +235,49 @@ def run_classify(args):
     y_true, y_pred = [], []
     kept = []
 
+    # Load existing human labels if output file exists
+    existing_records = []
+    if exists:
+        try:
+            with open(out_human, "r", encoding="utf-8") as f:
+                existing_records = json.load(f)
+            # Load existing y_true/y_pred from completed items
+            for rec in existing_records:
+                if "label_semantic_similarity_human" in rec:
+                    # Find original index to get gold label
+                    for orig_idx, orig_rec in enumerate(data):
+                        if (orig_rec.get("sentence_base", "") == rec.get("sentence_base", "") and
+                            orig_rec.get("sentence_test", "") == rec.get("sentence_test", "")):
+                            y_true.append(bool(orig_rec.get(gold_key)))
+                            y_pred.append(bool(rec["label_semantic_similarity_human"]))
+                            kept.append(rec)
+                            break
+        except (json.JSONDecodeError, IOError):
+            print("Warning: Could not load existing output, starting fresh.")
+            exists = False
+
     with open(report_path, "w", encoding="utf-8") as rfp:
         append_report_line(rfp, f"REPORT classify @ {datetime.now().isoformat()}")
         append_report_line(rfp, f"Input: {args.input}")
         append_report_line(rfp, f"Seed: {args.seed}  MaxLen: {args.max_len}")
+        if exists:
+            append_report_line(rfp, f"Resuming from item {resume_idx + 1}, {len(completed_indices)} already completed")
         append_report_line(rfp, "-"*60)
 
         print(f"\nLoaded {len(data)} items. Shuffled with seed={args.seed}.")
+        if exists:
+            print(f"Resuming from item {resume_idx + 1}. {len(completed_indices)} items already completed.")
         print("Label True/False (t/f). 's' to skip.\n")
 
-        for i, idx in enumerate(order, 1):
+        # Find the starting point in the shuffled order
+        start_pos = 0
+        if exists and not is_complete:
+            for pos, idx in enumerate(order):
+                if idx == resume_idx:
+                    start_pos = pos + 1
+                    break
+
+        for i, idx in enumerate(order[start_pos:], start_pos + 1):
             rec = data[idx]
             ok, a = validate_ascii(rec, fields, args.max_len, log)
             if not ok: continue
@@ -181,8 +286,25 @@ def run_classify(args):
             print("-"*60)
             print(f"[{len(kept)+1}] Base : {base}")
             print(f"      Test : {test}")
+
+            # Show existing label if in review mode
+            existing_label = None
+            if is_complete:
+                for existing_rec in existing_records:
+                    if (existing_rec.get("sentence_base", "") == base and
+                        existing_rec.get("sentence_test", "") == test):
+                        existing_label = existing_rec.get("label_semantic_similarity_human")
+                        current_label = "True" if existing_label else "False"
+                        print(f"      Current: {current_label}")
+                        break
+
             while True:
-                lab = input("Label (t/f or s to skip): ").strip().lower()
+                if is_complete and existing_label is not None:
+                    lab = input("Label (t/f) or 's' to skip, Enter to keep current: ").strip().lower()
+                    if lab == "":
+                        lab = "t" if existing_label else "f"
+                else:
+                    lab = input("Label (t/f or s to skip): ").strip().lower()
                 if lab in ("t","true","f","false","s"): break
                 print("Please type 't', 'f', or 's'.")
             if lab == "s":
@@ -205,10 +327,28 @@ def run_classify(args):
 
     # Output HUMAN file
     out_records = []
-    for rec, h in zip(kept, y_pred):
-        new = dict(rec)
-        new["label_semantic_similarity_human"] = bool(h)
-        out_records.append(new)
+    # Start with existing records that weren't modified in this session
+    processed_keys = {(rec.get("sentence_base", ""), rec.get("sentence_test", "")) for rec in kept}
+
+    if is_complete:
+        # In review mode, we only keep the records processed in this session
+        for rec, h in zip(kept, y_pred):
+            new = dict(rec)
+            new["label_semantic_similarity_human"] = bool(h)
+            out_records.append(new)
+    else:
+        # In resume mode, keep existing unprocessed records plus new ones
+        for existing_rec in existing_records:
+            key = (existing_rec.get("sentence_base", ""), existing_rec.get("sentence_test", ""))
+            if key not in processed_keys:
+                out_records.append(existing_rec)
+
+        # Add newly processed records
+        for rec, h in zip(kept, y_pred):
+            new = dict(rec)
+            new["label_semantic_similarity_human"] = bool(h)
+            out_records.append(new)
+
     write_json(out_human, out_records)
 
     # Metrics + report
@@ -242,9 +382,24 @@ def run_rank(args):
     rnd.shuffle(order)
 
     out_human, log_path, report_path = make_paths(args.input)
+
+    # Check for existing output and handle accordingly
+    exists, is_complete, completed_indices, resume_idx = check_existing_output(out_human, data, "rank")
+
+    if exists:
+        if is_complete:
+            if not confirm_review_revision():
+                print("Exiting without changes.")
+                return
+            print("Review mode: You can revise any previous labels.")
+        else:
+            print(f"Resuming from item {resume_idx + 1}. {len(completed_indices)} items already completed.")
+
     log = {
         "cmd": "rank", "input": args.input, "seed": args.seed, "max_len": args.max_len,
-        "start_ts": time.time(), "skips": [], "items": []
+        "start_ts": time.time(), "skips": [], "items": [],
+        "resuming_from": resume_idx if exists else None,
+        "existing_completed": len(completed_indices) if exists else 0
     }
 
     fields = ["sentence_base", "sentence_a", "sentence_b"]
@@ -253,16 +408,51 @@ def run_rank(args):
     y_true, y_pred = [], []
     kept = []
 
+    # Load existing human labels if output file exists
+    existing_records = []
+    if exists:
+        try:
+            with open(out_human, "r", encoding="utf-8") as f:
+                existing_records = json.load(f)
+            # Load existing y_true/y_pred from completed items
+            for rec in existing_records:
+                if "label_more_similar_human" in rec:
+                    # Find original index to get gold label
+                    for orig_idx, orig_rec in enumerate(data):
+                        if (orig_rec.get("sentence_base", "") == rec.get("sentence_base", "") and
+                            orig_rec.get("sentence_a", "") == rec.get("sentence_a", "") and
+                            orig_rec.get("sentence_b", "") == rec.get("sentence_b", "")):
+                            gold = "a" if str(orig_rec.get(gold_key)).lower()=="a" else "b"
+                            y_true.append(gold)
+                            y_pred.append(rec["label_more_similar_human"])
+                            kept.append(rec)
+                            break
+        except (json.JSONDecodeError, IOError):
+            print("Warning: Could not load existing output, starting fresh.")
+            exists = False
+
     with open(report_path, "w", encoding="utf-8") as rfp:
         append_report_line(rfp, f"REPORT rank @ {datetime.now().isoformat()}")
         append_report_line(rfp, f"Input: {args.input}")
         append_report_line(rfp, f"Seed: {args.seed}  MaxLen: {args.max_len}")
+        if exists:
+            append_report_line(rfp, f"Resuming from item {resume_idx + 1}, {len(completed_indices)} already completed")
         append_report_line(rfp, "-"*60)
 
         print(f"\nLoaded {len(data)} items. Shuffled with seed={args.seed}.")
+        if exists:
+            print(f"Resuming from item {resume_idx + 1}. {len(completed_indices)} items already completed.")
         print("Choose 'a' or 'b'. 's' to skip.\n")
 
-        for i, idx in enumerate(order, 1):
+        # Find the starting point in the shuffled order
+        start_pos = 0
+        if exists and not is_complete:
+            for pos, idx in enumerate(order):
+                if idx == resume_idx:
+                    start_pos = pos + 1
+                    break
+
+        for i, idx in enumerate(order[start_pos:], start_pos + 1):
             rec = data[idx]
             ok, a = validate_ascii(rec, fields, args.max_len, log)
             if not ok: continue
@@ -272,8 +462,25 @@ def run_rank(args):
             print(f"[{len(kept)+1}] Base : {base}")
             print(f"      (a): {sa}")
             print(f"      (b): {sb}")
+
+            # Show existing label if in review mode
+            existing_label = None
+            if is_complete:
+                for existing_rec in existing_records:
+                    if (existing_rec.get("sentence_base", "") == base and
+                        existing_rec.get("sentence_a", "") == sa and
+                        existing_rec.get("sentence_b", "") == sb):
+                        existing_label = existing_rec.get("label_more_similar_human")
+                        print(f"      Current: {existing_label}")
+                        break
+
             while True:
-                lab = input("Label ('a'/'b' or 's' to skip): ").strip().lower()
+                if is_complete and existing_label is not None:
+                    lab = input("Label ('a'/'b' or 's' to skip, Enter to keep current: ").strip().lower()
+                    if lab == "":
+                        lab = existing_label
+                else:
+                    lab = input("Label ('a'/'b' or 's' to skip): ").strip().lower()
                 if lab in ("a","b","s"): break
                 print("Please type 'a', 'b', or 's'.")
             if lab == "s":
@@ -297,10 +504,28 @@ def run_rank(args):
 
     # Output HUMAN file
     out_records = []
-    for rec, h in zip(kept, y_pred):
-        new = dict(rec)
-        new["label_more_similar_human"] = h
-        out_records.append(new)
+    # Start with existing records that weren't modified in this session
+    processed_keys = {(rec.get("sentence_base", ""), rec.get("sentence_a", ""), rec.get("sentence_b", "")) for rec in kept}
+
+    if is_complete:
+        # In review mode, we only keep the records processed in this session
+        for rec, h in zip(kept, y_pred):
+            new = dict(rec)
+            new["label_more_similar_human"] = h
+            out_records.append(new)
+    else:
+        # In resume mode, keep existing unprocessed records plus new ones
+        for existing_rec in existing_records:
+            key = (existing_rec.get("sentence_base", ""), existing_rec.get("sentence_a", ""), existing_rec.get("sentence_b", ""))
+            if key not in processed_keys:
+                out_records.append(existing_rec)
+
+        # Add newly processed records
+        for rec, h in zip(kept, y_pred):
+            new = dict(rec)
+            new["label_more_similar_human"] = h
+            out_records.append(new)
+
     write_json(out_human, out_records)
 
     # Metrics + report

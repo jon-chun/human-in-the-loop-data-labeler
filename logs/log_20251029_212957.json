@@ -1,0 +1,234 @@
+{
+  "cmd": "classify",
+  "input": "inputs/sentence_similarity.json",
+  "seed": 42,
+  "max_len": 1000,
+  "start_ts": 1761787797.987812,
+  "skips": [
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "The package arrived two days late.|ae0ff471e578",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "Keep the seedlings in partial shade.|5797a8f33b38",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "La película fue muy emocionante.|88938e8bccb7",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "Ils habitent près de la mer.|ce7ef35605f8",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "The dog chased a squirrel across the yar...|561a634fa309",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "The deadline was extended by two days.|f0f7b2c18f5e",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "We need a vegetarian option.|68d0a539a158",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "Coffee prices rose sharply this year.|c9b7539d7657",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "The server responded with 404.|d5fb2ec42f24",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "The meeting moved from 2 to 3 p.m.|60ca71ee7316",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "They hiked to the peak at sunrise.|d528259e885e",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "The conference runs from May 3–5.|42fb76b99fcb",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "Water the cactus sparingly in winter.|8e197cc8c857",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "We camped under the stars.|a51335f8d557",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "She plays the cello in an orchestra.|4818b9edd291",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "Set the oven to 375°F.|5b9dcb0b6365",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "He fixed the bug in the payment form.|8f8c0e5e768c",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "He runs five kilometers every morning.|785ddc7eeb01",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "I need to reset my account password.|5f42a300efb2",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "Her flight lands tomorrow morning.|3e930ba4bcfb",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "The bakery sold out of croissants.|fdc93d7f70b3",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "The startup raised a seed round.|e9bc051bed59",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "The guitar was out of tune.|e8d4241705b0",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "She started learning Japanese last fall.|fbc2679aea93",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "Install the update and reboot.|6a15389de3da",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "The toddler fell asleep in the car seat.|7aa8428a833e",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "Upload the PDF, not the DOCX.|5f240bc3554a",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "The restaurant opens at noon.|5658a56d9eaf",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "Please recycle plastic bottles.|77d6f1cafacb",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    },
+    {
+      "reason": "missing_or_empty:sentence_test",
+      "record_preview": {
+        "sentence_base": "He spilled coffee on the keyboard.|d42afe0562f4",
+        "sentence_test": "|e3b0c44298fc"
+      }
+    }
+  ],
+  "items": [],
+  "metrics": {
+    "accuracy": 0.0,
+    "recall_pos": 0.0,
+    "f1_pos": 0.0,
+    "recall_neg": 0.0,
+    "f1_neg": 0.0,
+    "confusion": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 0
+    }
+  },
+  "end_ts": 1761787797.999077
+}

@@ -1,0 +1,235 @@
+{
+  "cmd": "classify",
+  "input": "inputs/sentence_classifier.json",
+  "seed": 42,
+  "max_len": 1000,
+  "start_ts": 1761786746.205827,
+  "skips": [
+    {
+      "reason": "user_skip",
+      "record_preview": {
+        "base": "I parked the car in the underground gara...|249b831faaa9",
+        "test": "The vehicle is in the basement parking l...|41646ef25ac7"
+      }
+    },
+    {
+      "reason": "user_skip",
+      "record_preview": {
+        "base": "Ill be on vacation next week.|0c459e16e266",
+        "test": "Im taking time off all of next week.|2c8d4105bd9d"
+      }
+    }
+  ],
+  "items": [
+    {
+      "idx": 19,
+      "base_preview": "The battery died after two hours of stre...|e104ae2d06dd",
+      "test_preview": "The power bank charged my phone to 100%.|12d90a7dfe40",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 14,
+      "base_preview": "She won the marathon with a record time.|e03cb878df4e",
+      "test_preview": "She set a record while winning the marat...|c6fe0e9fc2f4",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 10,
+      "base_preview": "He paid the invoice in full.|c3e20716fe64",
+      "test_preview": "The bill was settled completely by him.|a7fb37467b41",
+      "human": true,
+      "gold_hidden": true
+    },
+    {
+      "idx": 26,
+      "base_preview": "Please email me the signed contract.|83fcce547733",
+      "test_preview": "Print the blank form and bring it to the...|d60936c17086",
+      "human": true,
+      "gold_hidden": true
+    },
+    {
+      "idx": 22,
+      "base_preview": "Our train arrives at 7:10 a.m.|e32edbaa668a",
+      "test_preview": "We depart at 7:10 a.m.|49393a4e9c3b",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 6,
+      "base_preview": "This soup is too salty for me.|16647258d15f",
+      "test_preview": "For my taste, the soup has too much salt...|88a028ed38c9",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 11,
+      "base_preview": "Please email me the signed contract.|83fcce547733",
+      "test_preview": "Send the executed agreement to me by ema...|fd3ca783a2ee",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 15,
+      "base_preview": "The meeting was postponed until Friday.|f909432e78fd",
+      "test_preview": "The meeting was canceled entirely.|7167b81a4736",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 9,
+      "base_preview": "The cat is sleeping on the keyboard agai...|07f08360f848",
+      "test_preview": "Once more, the cat is napping on my keyb...|848eb3acd3ea",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 25,
+      "base_preview": "He paid the invoice in full.|c3e20716fe64",
+      "test_preview": "He disputed the bill and refused to pay.|fac2bec8d275",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 29,
+      "base_preview": "She won the marathon with a record time.|e03cb878df4e",
+      "test_preview": "She withdrew from the marathon before it...|d5368c73a928",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 21,
+      "base_preview": "This soup is too salty for me.|16647258d15f",
+      "test_preview": "There is no salt in these cookies.|bbcd5cc89fdd",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 16,
+      "base_preview": "She adopted a golden retriever puppy.|834edab6107d",
+      "test_preview": "She is allergic to dogs and avoids them.|b8d9fc70de26",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 27,
+      "base_preview": "Ill be on vacation next week.|0c459e16e266",
+      "test_preview": "I worked overtime every day last week.|776e17b1e4e0",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 1,
+      "base_preview": "She adopted a golden retriever puppy.|834edab6107d",
+      "test_preview": "She took home a young golden retriever.|e5c75126ebe7",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 13,
+      "base_preview": "The river froze during the cold snap.|d1f53ffb1c8e",
+      "test_preview": "Due to the freeze, the river turned to i...|64d98acbf8df",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 18,
+      "base_preview": "Turn off the lights when you leave.|a2f3319e0d47",
+      "test_preview": "Turn the thermostat up to 78 degrees.|9fbe7aa6809c",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 2,
+      "base_preview": "NASA launched a new satellite last night...|28a8eab4c6b9",
+      "test_preview": "A new satellite was sent into orbit by N...|9851df1403e1",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 17,
+      "base_preview": "NASA launched a new satellite last night...|28a8eab4c6b9",
+      "test_preview": "The weather grounded all flights today.|caf4e323f993",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 28,
+      "base_preview": "The river froze during the cold snap.|d1f53ffb1c8e",
+      "test_preview": "The desert was scorching that summer.|20ece1c845f9",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 4,
+      "base_preview": "The battery died after two hours of stre...|e104ae2d06dd",
+      "test_preview": "After watching videos for two hours, the...|2a07d8200d4a",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 24,
+      "base_preview": "The cat is sleeping on the keyboard agai...|07f08360f848",
+      "test_preview": "The dog is barking at the mail carrier.|ca364e1e00a1",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 7,
+      "base_preview": "Our train arrives at 7:10 a.m.|e32edbaa668a",
+      "test_preview": "We get in at ten past seven in the morni...|7a321c216d1e",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 8,
+      "base_preview": "The code passes all unit tests.|dd847b572756",
+      "test_preview": "Every unit test is succeeding.|ef64229a40d4",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 23,
+      "base_preview": "The code passes all unit tests.|dd847b572756",
+      "test_preview": "Half the integration tests are failing.|4fea83d49b2b",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 0,
+      "base_preview": "The meeting was postponed until Friday.|f909432e78fd",
+      "test_preview": "The meeting got delayed to Friday.|5506285f5ed4",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 3,
+      "base_preview": "Turn off the lights when you leave.|a2f3319e0d47",
+      "test_preview": "Please switch the lights off before exit...|41bc5b8c1442",
+      "human": false,
+      "gold_hidden": true
+    },
+    {
+      "idx": 20,
+      "base_preview": "I parked the car in the underground gara...|249b831faaa9",
+      "test_preview": "Street parking is free on Sundays.|939f4337516f",
+      "human": false,
+      "gold_hidden": true
+    }
+  ],
+  "metrics": {
+    "accuracy": 0.5357142857142857,
+    "recall_pos": 0.07692307692307693,
+    "f1_pos": 0.13333333333333336,
+    "recall_neg": 0.9333333333333333,
+    "f1_neg": 0.6829268292682926,
+    "confusion": {
+      "tp": 1,
+      "fp": 1,
+      "fn": 12,
+      "tn": 14
+    }
+  },
+  "end_ts": 1761786841.18085
+}

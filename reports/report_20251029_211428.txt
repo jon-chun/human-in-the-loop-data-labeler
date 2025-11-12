@@ -1,0 +1,13 @@
+REPORT classify @ 2025-10-29T21:14:28.008337
+Input: inputs/sentence_similarity.json
+Seed: 42  MaxLen: 1000
+------------------------------------------------------------
+
+RESULTS
+Accuracy: 0.0000
+Recall(pos): 0.0000  F1(pos): 0.0000
+Recall(neg): 0.0000  F1(neg): 0.0000
+Confusion: TP=0 FP=0 FN=0 TN=0
+
+Human output: outputs/sentence_similarity_HUMAN.json
+JSON log:     logs/log_20251029_211428.json

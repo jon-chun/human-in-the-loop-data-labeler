@@ -1,0 +1,13 @@
+REPORT classify @ 2025-10-29T21:12:26.206164
+Input: inputs/sentence_classifier.json
+Seed: 42  MaxLen: 1000
+------------------------------------------------------------
+
+RESULTS
+Accuracy: 0.5357
+Recall(pos): 0.0769  F1(pos): 0.1333
+Recall(neg): 0.9333  F1(neg): 0.6829
+Confusion: TP=1 FP=1 FN=12 TN=14
+
+Human output: outputs/sentence_classifier_HUMAN.json
+JSON log:     logs/log_20251029_211226.json

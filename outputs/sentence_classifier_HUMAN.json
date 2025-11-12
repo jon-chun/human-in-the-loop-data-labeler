@@ -1,0 +1,170 @@
+[
+  {
+    "sentence_base": "The battery died after two hours of streaming.",
+    "sentence_test": "The power bank charged my phone to 100%.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "She won the marathon with a record time.",
+    "sentence_test": "She set a record while winning the marathon.",
+    "label_semantic_similarity": true,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "He paid the invoice in full.",
+    "sentence_test": "The bill was settled completely by him.",
+    "label_semantic_similarity": true,
+    "label_semantic_similarity_human": true
+  },
+  {
+    "sentence_base": "Please email me the signed contract.",
+    "sentence_test": "Print the blank form and bring it to the meeting.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": true
+  },
+  {
+    "sentence_base": "Our train arrives at 7:10 a.m.",
+    "sentence_test": "We depart at 7:10 a.m.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "This soup is too salty for me.",
+    "sentence_test": "For my taste, the soup has too much salt.",
+    "label_semantic_similarity": true,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "Please email me the signed contract.",
+    "sentence_test": "Send the executed agreement to me by email.",
+    "label_semantic_similarity": true,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "The meeting was postponed until Friday.",
+    "sentence_test": "The meeting was canceled entirely.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "The cat is sleeping on the keyboard again.",
+    "sentence_test": "Once more, the cat is napping on my keyboard.",
+    "label_semantic_similarity": true,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "He paid the invoice in full.",
+    "sentence_test": "He disputed the bill and refused to pay.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "She won the marathon with a record time.",
+    "sentence_test": "She withdrew from the marathon before it started.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "This soup is too salty for me.",
+    "sentence_test": "There is no salt in these cookies.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "She adopted a golden retriever puppy.",
+    "sentence_test": "She is allergic to dogs and avoids them.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "I’ll be on vacation next week.",
+    "sentence_test": "I worked overtime every day last week.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "She adopted a golden retriever puppy.",
+    "sentence_test": "She took home a young golden retriever.",
+    "label_semantic_similarity": true,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "The river froze during the cold snap.",
+    "sentence_test": "Due to the freeze, the river turned to ice.",
+    "label_semantic_similarity": true,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "Turn off the lights when you leave.",
+    "sentence_test": "Turn the thermostat up to 78 degrees.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "NASA launched a new satellite last night.",
+    "sentence_test": "A new satellite was sent into orbit by NASA yesterday evening.",
+    "label_semantic_similarity": true,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "NASA launched a new satellite last night.",
+    "sentence_test": "The weather grounded all flights today.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "The river froze during the cold snap.",
+    "sentence_test": "The desert was scorching that summer.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "The battery died after two hours of streaming.",
+    "sentence_test": "After watching videos for two hours, the battery went flat.",
+    "label_semantic_similarity": true,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "The cat is sleeping on the keyboard again.",
+    "sentence_test": "The dog is barking at the mail carrier.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "Our train arrives at 7:10 a.m.",
+    "sentence_test": "We get in at ten past seven in the morning.",
+    "label_semantic_similarity": true,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "The code passes all unit tests.",
+    "sentence_test": "Every unit test is succeeding.",
+    "label_semantic_similarity": true,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "The code passes all unit tests.",
+    "sentence_test": "Half the integration tests are failing.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "The meeting was postponed until Friday.",
+    "sentence_test": "The meeting got delayed to Friday.",
+    "label_semantic_similarity": true,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "Turn off the lights when you leave.",
+    "sentence_test": "Please switch the lights off before exiting.",
+    "label_semantic_similarity": true,
+    "label_semantic_similarity_human": false
+  },
+  {
+    "sentence_base": "I parked the car in the underground garage.",
+    "sentence_test": "Street parking is free on Sundays.",
+    "label_semantic_similarity": false,
+    "label_semantic_similarity_human": false
+  }
+]
